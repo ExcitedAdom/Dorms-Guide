@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>October 11th District STEM School's Dorms</title>
+
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --text: #111;
+      --card-bg: white;
+      --primary: #1e40af;
+      --shadow: rgba(0,0,0,0.1);
+      --modal-bg: rgba(0,0,0,0.5);
+    }
+
+    body.dark {
+      --bg: #0f172a;
+      --text: #e2e8f0;
+      --card-bg: #1e293b;
+      --primary: #3b82f6;
+      --shadow: rgba(0,0,0,0.4);
+      --modal-bg: rgba(0,0,0,0.6);
+    }
+
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      transition: 0.3s;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    #darkToggle {
+      position: absolute;
+      right: 20px;
+      top: 18px;
+      background: white;
+      color: black;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    body.dark #darkToggle {
+      background: #334155;
+      color: white;
+    }
+
+    .container { max-width: 1200px; margin: auto; padding: 20px; }
+    .card-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card:hover { transform: scale(1.03); }
+
+    .hidden { display: none; }
+
+    .back-btn {
+      background: var(--primary);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .room-box {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px var(--shadow);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .room-box:hover { transform: scale(1.01); }
+
+    #searchBar {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid var(--primary);
+      background: var(--card-bg);
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    /* ROOM MODAL */
+    #room-modal, #profile-modal {
+      position: fixed;
+      inset: 0;
+      background: var(--modal-bg);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      max-width: 550px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      animation: pop 0.25s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .resident-box {
+      display: flex;
+      gap: 12px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 2px 6px var(--shadow);
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .resident-box:hover { transform: scale(1.01); }
+
+    .resident-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .bed-label {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+October 11th District STEM School's Dormitories Guide
+  <button id="darkToggle" onclick="toggleDarkMode()">Dark Mode</button>
+</header>
+
+<div class="container">
+
+  <!-- HOME -->
+  <div id="home-page">
+    <h2>Choose a Dorm:</h2>
+    <div class="card-grid">
+      <div class="card" onclick="openDorm('boys')">Boys' Dorm</div>
+      <div class="card" onclick="openDorm('girls')">Girls' Dorm</div>
+    </div>
+  </div>
+
+  <!-- BOYS -->
+  <div id="boys-page" class="hidden">
+    <span class="back-btn" onclick="goHome()">← Back</span>
+    <h2>Boys' Dorm</h2>
+    <div class="card-grid">
+      <div class="card" onclick="openFloor('boys','A')">Floor A</div>
+      <div class="card" onclick="openFloor('boys','B')">Floor B</div>
+      <div class="card" onclick="openFloor('boys','C')">Floor C</div>
+    </div>
+  </div>
+
+  <!-- GIRLS -->
+  <div id="girls-page" class="hidden">
+    <span class="back-btn" onclick="goHome()">← Back</span>
+    <h2>Girls' Dorm</h2>
+    <div class="card-grid">
+      <div class="card" onclick="openFloor('girls','A')">Floor A</div>
+      <div class="card" onclick="openFloor('girls','B')">Floor B</div>
+      <div class="card" onclick="openFloor('girls','C')">Floor C</div>
+    </div>
+  </div>
+
+  <!-- FLOOR PAGE -->
+  <div id="floor-page" class="hidden">
+    <span class="back-btn" onclick="goBackDorm()">← Back</span>
+    <h2 id="floor-title"></h2>
+
+    <input id="searchBar" placeholder="Search rooms or students..." oninput="searchRooms()">
+    <div id="rooms-container"></div>
+  </div>
+</div>
+
+<!-- ROOM MODAL -->
+<div id="room-modal">
+  <div class="modal-content">
+    <h2 id="modal-room-title"></h2>
+    <div id="modal-residents"></div>
+    <button class="back-btn" onclick="closeRoomModal()">Close</button>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal">
+  <div class="modal-content">
+    <h2 id="profile-name"></h2>
+    <img id="profile-photo" style="width:160px;border-radius:12px;margin:10px 0;">
+    <p id="profile-info"></p>
+    <button class="back-btn" onclick="closeProfileModal()">Close</button>
+  </div>
+</div>
+
+<script>
+/* Empty bed */
+const emptyBed = (n)=>({
+  bed:n,
+  name:"Empty Bed",
+  info:"No student assigned"
+});
+
+/* Data with 4 students per room */
+function generateStudents(room) {
+return [ { bed:1, name:`Student ${room}-1`}, 
+{ bed:2, name:`Student ${room}-2`}, 
+{ bed:3, name:`Student ${room}-3`}, 
+{ bed:4, name:`Student ${room}-4`} ]; }
+
+const boysData = {
+  A: Array.from({length:17},(_,i)=>({
+    room:`A${i+1}`,
+       current:
+      i === 0 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 1 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 2 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 3? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 4? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 5? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 6? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 7? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 8? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 9? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 10? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 11? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 12? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 13? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 14? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 15? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 16? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] : generateStudents(`A${i+1}`)
+  })),
+
+   B: Array.from({length:17},(_,i)=>({
+    room:`B${i+1}`,
+    current:
+      i === 0 ? [
+        { bed:1, name:"Khaled Wael"},
+        { bed:2, name:"Mostafa Hussein"},
+        { bed:3, name:"Mostafa Hassan"},
+        { bed:4, name:"Mina Melad"}
+      ] : i === 1 ? [
+        { bed:1, name:"Mohamed Abdelhameed"},
+        { bed:2, name:"Ahmed Rafea"},
+        { bed:3, name:"Omar Hany"},
+        { bed:4, name:"Omar Hisham"}
+      ] : i === 2 ? [
+        { bed:1, name:"Adam Mahmoud"},
+        { bed:2, name:"Anas Ahmed"},
+        { bed:3, name:"Abdelrahman Mohamed"},
+        { bed:4, name:"Ali Eldin Hesham"}
+      ] : i === 3? [
+        { bed:1, name:"Abanoub Ehab"},
+        { bed:2, name:"David george"},
+        { bed:3, name:"Thomas Bishoy"},
+        { bed:4, name:"Filopater Philip"}
+      ] : i === 4? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 5? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 6? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 7? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 8? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 9? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 10? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 11? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 12? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 13? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 14? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 15? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 16? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] : generateStudents(`B${i+1}`)
+  })),
+
+  C: Array.from({length:17},(_,i)=>({
+    room:`C${i+1}`,
+        current:
+      i === 0 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 1 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 2 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 3? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 4? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 5? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 6? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 7? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 8? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 9? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 10? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 11? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 12? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 13? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 14? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 15? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 16? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] : generateStudents(`C${i+1}`)
+  })),
+};
+
+const girlsData = {
+  A: Array.from({length:17},(_,i)=>({
+    room:`A${i+1}`,
+       current:
+      i === 0 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 1 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 2 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 3? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 4? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 5? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 6? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 7? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 8? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 9? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 10? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 11? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 12? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 13? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 14? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 15? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 16? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] : generateStudents(`A${i+1}`)
+  })),
+
+   B: Array.from({length:17},(_,i)=>({
+    room:`B${i+1}`,
+    current:
+      i === 0 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 1 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 2 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 3? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 4? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 5? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 6? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 7? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 8? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 9? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 10? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 11? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 12? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 13? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 14? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 15? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 16? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] : generateStudents(`B${i+1}`)
+  })),
+
+  C: Array.from({length:17},(_,i)=>({
+    room:`C${i+1}`,
+        current:
+      i === 0 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 1 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 2 ? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 3? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 4? [
+        { bed:1, name:""},
+        { bed:2, name:""},
+        { bed:3, name:""},
+        { bed:4, name:""}
+      ] : i === 5? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 6? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 7? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 8? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 9? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 10? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 11? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 12? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 13? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 14? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 15? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] :i === 16? [
+        { bed:1, name:"" },
+        { bed:2, name:"" },
+        { bed:3, name:"" },
+        { bed:4, name:"" }
+      ] : generateStudents(`C${i+1}`)
+  })),
+};
+
+let currentDorm=null, currentFloor=null;
+
+/* NAVIGATION */
+function openDorm(k){
+  currentDorm=k;
+  document.getElementById('home-page').classList.add('hidden');
+  document.getElementById(k+'-page').classList.remove('hidden');
+}
+function goHome(){
+  document.getElementById('boys-page').classList.add('hidden');
+  document.getElementById('girls-page').classList.add('hidden');
+  document.getElementById('home-page').classList.remove('hidden');
+}
+function openFloor(d,f){
+  currentDorm=d; currentFloor=f;
+  document.getElementById(d+'-page').classList.add('hidden');
+  document.getElementById('floor-page').classList.remove('hidden');
+  loadRooms();
+}
+function goBackDorm(){
+  document.getElementById('floor-page').classList.add('hidden');
+  document.getElementById(currentDorm+'-page').classList.remove('hidden');
+}
+
+/* ROOM LIST */
+function loadRooms(){
+  document.getElementById('floor-title').innerText =
+    `${currentDorm.toUpperCase()} Dorm — Floor ${currentFloor}`;
+
+  const dormData = currentDorm==="boys"?boysData:girlsData;
+  const data = dormData[currentFloor];
+  const cont = document.getElementById('rooms-container');
+  cont.innerHTML="";
+
+  data.forEach((room,idx)=>{
+    const names = room.current.map(s=>`Bed ${s.bed}: ${s.name}`).join("<br>");
+    const div=document.createElement("div");
+    div.className="room-box";
+    div.onclick=()=>openRoomDetails(idx);
+    div.innerHTML=`
+      <div class="room-title">Room ${room.room}</div>
+      <div class="sub">${names}</div>
+    `;
+    cont.appendChild(div);
+  });
+}
+
+/* SEARCH */
+function searchRooms(){
+  const term = document.getElementById("searchBar").value.toLowerCase();
+  const dormData = currentDorm==="boys"?boysData:girlsData;
+  const data = dormData[currentFloor];
+  const cont = document.getElementById('rooms-container');
+  cont.innerHTML="";
+
+  data.forEach((room,idx)=>{
+    const match =
+      room.room.toLowerCase().includes(term) ||
+      room.current.some(s=>s.name.toLowerCase().includes(term));
+
+    if(match){
+      const names = room.current.map(s=>`Bed ${s.bed}: ${s.name}`).join("<br>");
+      const div=document.createElement("div");
+      div.className="room-box";
+      div.onclick=()=>openRoomDetails(idx);
+      div.innerHTML=`
+        <div class="room-title">Room ${room.room}</div>
+        <div class="sub">${names}</div>
+      `;
+      cont.appendChild(div);
+    }
+  });
+}
+
+/* ROOM MODAL */
+function openRoomDetails(index){
+  const dormData = currentDorm==="boys"?boysData:girlsData;
+  const room = dormData[currentFloor][index];
+
+  document.getElementById('modal-room-title').innerText = `Room ${room.room}`;
+  const cont=document.getElementById('modal-residents');
+  cont.innerHTML="";
+
+  room.current.forEach(s=>{
+    const div=document.createElement("div");
+    div.className="resident-box";
+    div.onclick=()=>openProfile(s);
+    div.innerHTML=`
+      <img class="resident-photo" src="${s.photo}">
+      <div>
+        <div class="bed-label">Bed ${s.bed}</div>
+        <strong>${s.name}</strong><br>
+        <span>${s.info}</span>
+      </div>
+    `;
+    cont.appendChild(div);
+  });
+
+  document.getElementById('room-modal').style.display="flex";
+}
+function closeRoomModal(){
+  document.getElementById('room-modal').style.display="none";
+}
+
+/* PROFILE MODAL */
+function openProfile(s){
+  document.getElementById("profile-name").innerText=s.name;
+  document.getElementById("profile-photo").src=s.photo;
+  document.getElementById("profile-info").innerText=s.info;
+  document.getElementById("profile-modal").style.display="flex";
+}
+function closeProfileModal(){
+  document.getElementById('profile-modal').style.display="none";
+}
+
+/* DARK MODE */
+function toggleDarkMode(){
+  document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>
